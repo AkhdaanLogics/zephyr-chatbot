@@ -11,7 +11,18 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const hasConfig = Boolean(
+  firebaseConfig.apiKey &&
+  firebaseConfig.authDomain &&
+  firebaseConfig.projectId &&
+  firebaseConfig.appId,
+);
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+const app = hasConfig
+  ? getApps().length
+    ? getApps()[0]
+    : initializeApp(firebaseConfig)
+  : null;
+
+export const auth = app ? getAuth(app) : null;
+export const db = app ? getFirestore(app) : null;

@@ -109,7 +109,9 @@ export default function Home() {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [isRegister, setIsRegister] = useState(false);
-  const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
+  const [currentUser, setCurrentUser] = useState(
+    () => auth?.currentUser ?? null,
+  );
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileComplete, setProfileComplete] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -133,6 +135,12 @@ export default function Home() {
   );
 
   useEffect(() => {
+    if (!auth) {
+      setAuthLoading(false);
+      setAuthError("Firebase config belum diisi.");
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setAuthLoading(false);
@@ -321,7 +329,7 @@ export default function Home() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      if (!currentUser) {
+      if (!currentUser || !db) {
         setProfileComplete(false);
         setProfileForm(emptyProfile);
         setAgreementAccepted(false);
@@ -407,6 +415,11 @@ export default function Home() {
     event.preventDefault();
     setAuthError(null);
 
+    if (!auth) {
+      setAuthError("Firebase config belum diisi.");
+      return;
+    }
+
     const captcha = await verifyTurnstile();
     if (!captcha.ok) {
       setAuthError(captcha.error ?? "Captcha gagal diverifikasi.");
@@ -431,6 +444,11 @@ export default function Home() {
   const handleGoogleLogin = async () => {
     setAuthError(null);
 
+    if (!auth) {
+      setAuthError("Firebase config belum diisi.");
+      return;
+    }
+
     const captcha = await verifyTurnstile();
     if (!captcha.ok) {
       setAuthError(captcha.error ?? "Captcha gagal diverifikasi.");
@@ -449,13 +467,17 @@ export default function Home() {
   };
 
   const handleLogout = async () => {
+    if (!auth) {
+      setAuthError("Firebase config belum diisi.");
+      return;
+    }
     await signOut(auth);
     setMessages([]);
     setProfileComplete(false);
   };
 
   const handleAgreementAccept = async () => {
-    if (!currentUser) {
+    if (!currentUser || !db) {
       setProfileError("Sesi login tidak ditemukan.");
       return;
     }
@@ -503,7 +525,7 @@ export default function Home() {
       return;
     }
 
-    if (!currentUser) {
+    if (!currentUser || !db) {
       setProfileError("Sesi login tidak ditemukan.");
       return;
     }
