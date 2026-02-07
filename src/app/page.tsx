@@ -722,7 +722,7 @@ export default function Home() {
                 </svg>
               </button>
               <span className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-400">
-                {currentUser.email ?? "Akun aktif"}
+                {currentUser?.email ?? "Akun aktif"}
               </span>
               <button
                 type="button"
@@ -1291,7 +1291,7 @@ export default function Home() {
                   </svg>
                 </button>
                 <span className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-400">
-                  {currentUser.email ?? "Akun aktif"}
+                  {currentUser?.email ?? "Akun aktif"}
                 </span>
                 <button
                   type="button"
