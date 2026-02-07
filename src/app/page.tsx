@@ -1,5 +1,6 @@
 "use client";
 
+import Script from "next/script";
 import type { FormEvent, KeyboardEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -54,7 +55,33 @@ const agreementText =
   "ke pihak ketiga tanpa persetujuanmu.";
 
 const cscApiKey = process.env.NEXT_PUBLIC_CSC_API_KEY ?? "";
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 const zippopotamBase = "https://api.zippopotam.us";
+
+const ZephyrLogo = () => (
+  <div className="inline-flex items-center gap-3">
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 48 48"
+      className="h-9 w-9 text-emerald-200"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M8 18c6-6 20-6 26 0" />
+      <path d="M6 28c8-6 22-6 30 0" />
+      <path d="M14 36c4-3 12-3 16 0" />
+    </svg>
+    <div>
+      <p className="text-xs uppercase tracking-[0.35em] text-emerald-200/70">
+        Zephyr
+      </p>
+      <p className="text-lg font-semibold text-white">Zephyr AI</p>
+    </div>
+  </div>
+);
 
 const emptyProfile: ProfileForm = {
   fullName: "",
@@ -98,6 +125,7 @@ export default function Home() {
   const [postalLoading, setPostalLoading] = useState(false);
   const [postalError, setPostalError] = useState<string | null>(null);
   const [postalValid, setPostalValid] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const lastAssistant = useMemo(
     () => messages.filter((msg) => msg.role === "assistant").at(-1),
@@ -111,6 +139,31 @@ export default function Home() {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    (
+      window as { turnstileCallback?: (token: string) => void }
+    ).turnstileCallback = (token: string) => {
+      setTurnstileToken(token);
+    };
+    (window as { turnstileExpired?: () => void }).turnstileExpired = () => {
+      setTurnstileToken(null);
+    };
+    (window as { turnstileError?: () => void }).turnstileError = () => {
+      setTurnstileToken(null);
+    };
+
+    return () => {
+      delete (window as { turnstileCallback?: (token: string) => void })
+        .turnstileCallback;
+      delete (window as { turnstileExpired?: () => void }).turnstileExpired;
+      delete (window as { turnstileError?: () => void }).turnstileError;
+    };
   }, []);
 
   const fetchCsc = async <T,>(url: string): Promise<T> => {
@@ -327,9 +380,38 @@ export default function Home() {
     void loadProfile();
   }, [currentUser]);
 
+  const verifyTurnstile = async () => {
+    if (!turnstileSiteKey) {
+      return { ok: false, error: "Turnstile site key belum diisi." };
+    }
+
+    if (!turnstileToken) {
+      return { ok: false, error: "Selesaikan captcha dulu." };
+    }
+
+    const response = await fetch("/api/verify-turnstile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: turnstileToken }),
+    });
+
+    const data = (await response.json()) as { success?: boolean };
+    if (!response.ok || !data.success) {
+      return { ok: false, error: "Captcha gagal diverifikasi." };
+    }
+
+    return { ok: true };
+  };
+
   const handleEmailAuth = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAuthError(null);
+
+    const captcha = await verifyTurnstile();
+    if (!captcha.ok) {
+      setAuthError(captcha.error ?? "Captcha gagal diverifikasi.");
+      return;
+    }
 
     try {
       if (isRegister) {
@@ -348,6 +430,13 @@ export default function Home() {
 
   const handleGoogleLogin = async () => {
     setAuthError(null);
+
+    const captcha = await verifyTurnstile();
+    if (!captcha.ok) {
+      setAuthError(captcha.error ?? "Captcha gagal diverifikasi.");
+      return;
+    }
+
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
     } catch (error) {
@@ -650,6 +739,10 @@ export default function Home() {
   if (!currentUser) {
     return (
       <div className="relative min-h-screen overflow-hidden text-zinc-100">
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="lazyOnload"
+        />
         <div className="pointer-events-none absolute inset-0 zephyr-grid opacity-20" />
         <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center gap-10 px-6 py-14">
           <div className="zephyr-panel zephyr-glow grid w-full gap-0 overflow-hidden rounded-3xl lg:grid-cols-[1.05fr_0.95fr]">
@@ -660,9 +753,7 @@ export default function Home() {
                 <div className="absolute left-10 top-40 h-32 w-32 rounded-full border border-emerald-300/20" />
               </div>
               <div className="relative">
-                <p className="text-xs uppercase tracking-[0.35em] text-emerald-200/70">
-                  Zephyr AI
-                </p>
+                <ZephyrLogo />
                 <h1 className="mt-4 text-4xl font-semibold leading-tight">
                   Ruang percakapan
                   <br />
@@ -710,6 +801,21 @@ export default function Home() {
                   placeholder="Password"
                   className="w-full rounded-2xl border border-zinc-800 bg-black/60 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600"
                 />
+                <div className="rounded-2xl border border-zinc-800 bg-black/50 px-4 py-3 text-xs text-zinc-400">
+                  <div
+                    className="cf-turnstile"
+                    data-sitekey={turnstileSiteKey}
+                    data-callback="turnstileCallback"
+                    data-expired-callback="turnstileExpired"
+                    data-error-callback="turnstileError"
+                    data-theme="dark"
+                  />
+                </div>
+                {!turnstileSiteKey && (
+                  <p className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-xs text-amber-200">
+                    Turnstile belum dikonfigurasi.
+                  </p>
+                )}
                 {authError && (
                   <p className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-xs text-red-200">
                     {authError}
@@ -725,7 +831,10 @@ export default function Home() {
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-500">
                 <button
                   type="button"
-                  onClick={() => setIsRegister((prev) => !prev)}
+                  onClick={() => {
+                    setIsRegister((prev) => !prev);
+                    setTurnstileToken(null);
+                  }}
                   className="text-zinc-300 transition hover:text-white"
                 >
                   {isRegister
