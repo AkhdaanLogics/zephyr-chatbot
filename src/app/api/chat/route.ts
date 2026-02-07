@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminAuth } from "@/lib/firebaseAdmin";
+import { getAdminAuth } from "@/lib/firebaseAdmin";
 
 const DEFAULT_MODEL = "llama-3.3-70b-versatile";
 const SYSTEM_PROMPT =
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const adminAuth = getAdminAuth();
     await adminAuth.verifyIdToken(token);
 
     const apiKey = process.env.GROQ_API_KEY;
