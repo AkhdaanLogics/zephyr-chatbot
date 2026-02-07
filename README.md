@@ -1,6 +1,6 @@
-# Zephyr AI
+# Intelektro AI
 
-Chatbot gratis bernama Zephyr AI yang terhubung ke Groq API dan siap dideploy ke Vercel.
+Chatbot gratis bernama Intelektro AI yang terhubung ke Groq API dan siap dideploy ke Vercel.
 
 ## Konfigurasi Environment
 

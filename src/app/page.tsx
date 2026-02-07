@@ -50,7 +50,7 @@ const quickPrompts = [
 ];
 
 const agreementText =
-  "Dengan menggunakan Zephyr AI, kamu menyetujui bahwa data identitas yang diberikan " +
+  "Dengan menggunakan Intelektro AI, kamu menyetujui bahwa data identitas yang diberikan " +
   "digunakan untuk personalisasi layanan dan keamanan akun. Data tidak akan dibagikan " +
   "ke pihak ketiga tanpa persetujuanmu.";
 
@@ -58,7 +58,7 @@ const cscApiKey = process.env.NEXT_PUBLIC_CSC_API_KEY ?? "";
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 const zippopotamBase = "https://api.zippopotam.us";
 
-const ZephyrLogo = () => (
+const IntelektroLogo = () => (
   <div className="inline-flex items-center gap-3">
     <svg
       aria-hidden="true"
@@ -76,9 +76,9 @@ const ZephyrLogo = () => (
     </svg>
     <div>
       <p className="text-xs uppercase tracking-[0.35em] text-emerald-200/70">
-        Zephyr
+        Intelektro
       </p>
-      <p className="text-lg font-semibold text-white">Zephyr AI</p>
+      <p className="text-lg font-semibold text-white">Intelektro AI</p>
     </div>
   </div>
 );
@@ -577,7 +577,7 @@ export default function Home() {
     try {
       const token = await currentUser?.getIdToken();
       if (!token) {
-        throw new Error("Silakan login dulu untuk memakai Zephyr.");
+        throw new Error("Silakan login dulu untuk memakai Intelektro.");
       }
 
       const response = await fetch("/api/chat", {
@@ -638,7 +638,7 @@ export default function Home() {
           Terakhir
         </p>
         <p className="mt-2 text-sm text-zinc-200">
-          {lastAssistant?.content || "Belum ada jawaban dari Zephyr."}
+          {lastAssistant?.content || "Belum ada jawaban dari Intelektro."}
         </p>
       </div>
       <div className="rounded-2xl border border-zinc-800 bg-black/40 p-4 text-sm text-zinc-400">
@@ -673,7 +673,7 @@ export default function Home() {
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
             Live Session
           </p>
-          <h2 className="text-2xl font-semibold text-white">Chat Zephyr</h2>
+          <h2 className="text-2xl font-semibold text-white">Chat Intelektro</h2>
         </div>
         <span className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-400">
           {isLoading ? "Menganalisa" : "Siap"}
@@ -716,7 +716,7 @@ export default function Home() {
             {isLoading && (
               <div className="flex items-center gap-2 text-xs text-zinc-400">
                 <span className="h-2 w-2 rounded-full bg-emerald-400/70 animate-pulse-soft" />
-                Zephyr sedang mengetik...
+                Intelektro sedang mengetik...
               </div>
             )}
           </div>
@@ -729,7 +729,7 @@ export default function Home() {
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Tanyakan apa saja ke Zephyr..."
+            placeholder="Tanyakan apa saja ke Intelektro..."
             rows={3}
             className="w-full resize-none bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-600 sm:text-base"
           />
@@ -775,7 +775,7 @@ export default function Home() {
                 <div className="absolute left-10 top-40 h-32 w-32 rounded-full border border-emerald-300/20" />
               </div>
               <div className="relative">
-                <ZephyrLogo />
+                <IntelektroLogo />
                 <h1 className="mt-4 text-4xl font-semibold leading-tight">
                   Ruang percakapan
                   <br />
@@ -788,21 +788,21 @@ export default function Home() {
               </div>
               <div className="relative rounded-2xl border border-emerald-500/20 bg-black/40 p-4 text-xs text-emerald-100/80">
                 <p className="text-sm text-emerald-50">
-                  Login untuk mengakses Zephyr AI.
+                  Login untuk mengakses Intelektro AI.
                 </p>
               </div>
             </div>
             <div className="flex flex-col justify-center px-8 py-10 sm:px-10">
               <div className="mb-6">
                 <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
-                  Zephyr Access
+                  Intelektro Access
                 </p>
                 <h2 className="mt-3 text-3xl font-semibold text-white">
-                  {isRegister ? "Buat akun baru" : "Masuk ke Zephyr"}
+                  {isRegister ? "Buat akun baru" : "Masuk ke Intelektro"}
                 </h2>
                 <p className="mt-2 text-sm text-zinc-400">
                   {isRegister
-                    ? "Daftar untuk mulai menggunakan Zephyr AI."
+                    ? "Daftar untuk mulai menggunakan Intelektro AI."
                     : "Login untuk melanjutkan sesi kamu."}
                 </p>
               </div>
@@ -917,7 +917,7 @@ export default function Home() {
             <div className="zephyr-panel zephyr-glow w-full max-w-2xl rounded-3xl p-8 sm:p-10">
               <div className="mb-6 text-center">
                 <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
-                  Zephyr Agreement
+                  Intelektro Agreement
                 </p>
                 <h1 className="mt-3 text-3xl font-semibold text-white">
                   User Agreement
@@ -950,7 +950,7 @@ export default function Home() {
           <div className="zephyr-panel zephyr-glow w-full max-w-2xl rounded-3xl p-8 sm:p-10">
             <div className="mb-6 text-center">
               <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
-                Zephyr Profile
+                Intelektro Profile
               </p>
               <h1 className="mt-3 text-3xl font-semibold text-white">
                 Lengkapi identitas dulu
@@ -1243,11 +1243,12 @@ export default function Home() {
               </div>
             </div>
             <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-              Zephyr AI
+              Intelektro AI
             </h1>
             <p className="max-w-2xl text-base text-zinc-400 sm:text-lg">
               Chatbot gratis dengan kecepatan Groq. Tulis ide, pertanyaan, atau
-              kebutuhan kontenmu, lalu biarkan Zephyr merespons dengan cepat.
+              kebutuhan kontenmu, lalu biarkan Intelektro merespons dengan
+              cepat.
             </p>
           </header>
         )}

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zephyr AI",
-  description: "Chatbot Zephyr AI dengan Groq API",
+  title: "Intelektro AI",
+  description: "Chatbot Intelektro AI dengan Groq API",
   icons: {
     icon: "/favicon.svg",
   },
