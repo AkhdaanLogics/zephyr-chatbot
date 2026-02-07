@@ -766,7 +766,7 @@ export default function Home() {
           strategy="lazyOnload"
         />
         <div className="pointer-events-none absolute inset-0 zephyr-grid opacity-20" />
-        <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center gap-10 px-6 py-14">
+        <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center gap-7 px-4 py-8 sm:gap-10 sm:px-6 sm:py-14">
           <div className="zephyr-panel zephyr-glow grid w-full gap-0 overflow-hidden rounded-3xl lg:grid-cols-[1.05fr_0.95fr]">
             <div className="relative hidden min-h-[520px] flex-col justify-between bg-gradient-to-br from-[#0b0f10] via-[#111718] to-[#040606] p-10 text-white lg:flex">
               <div className="absolute inset-0">
@@ -792,28 +792,31 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col justify-center px-8 py-10 sm:px-10">
-              <div className="mb-6">
+            <div className="flex flex-col justify-center px-5 py-6 sm:px-10 sm:py-10">
+              <div className="mb-4 sm:mb-6">
                 <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
                   Intelektro Access
                 </p>
-                <h2 className="mt-3 text-3xl font-semibold text-white">
+                <h2 className="mt-2 text-2xl font-semibold text-white sm:mt-3 sm:text-3xl">
                   {isRegister ? "Buat akun baru" : "Masuk ke Intelektro"}
                 </h2>
-                <p className="mt-2 text-sm text-zinc-400">
+                <p className="mt-1.5 text-xs text-zinc-400 sm:mt-2 sm:text-sm">
                   {isRegister
                     ? "Daftar untuk mulai menggunakan Intelektro AI."
                     : "Login untuk melanjutkan sesi kamu."}
                 </p>
               </div>
-              <form onSubmit={handleEmailAuth} className="space-y-4">
+              <form
+                onSubmit={handleEmailAuth}
+                className="space-y-2 sm:space-y-4"
+              >
                 <input
                   type="email"
                   required
                   value={userEmail}
                   onChange={(event) => setUserEmail(event.target.value)}
                   placeholder="Email"
-                  className="w-full rounded-2xl border border-zinc-800 bg-black/60 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600"
+                  className="h-7 w-full rounded-lg border border-zinc-800 bg-black/60 px-3 text-[10px] text-zinc-100 outline-none placeholder:text-zinc-600 sm:h-auto sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm"
                 />
                 <input
                   type="password"
@@ -821,9 +824,9 @@ export default function Home() {
                   value={userPassword}
                   onChange={(event) => setUserPassword(event.target.value)}
                   placeholder="Password"
-                  className="w-full rounded-2xl border border-zinc-800 bg-black/60 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600"
+                  className="h-7 w-full rounded-lg border border-zinc-800 bg-black/60 px-3 text-[10px] text-zinc-100 outline-none placeholder:text-zinc-600 sm:h-auto sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm"
                 />
-                <div className="rounded-2xl border border-zinc-800 bg-black/50 px-4 py-3 text-xs text-zinc-400">
+                <div className="turnstile-shell rounded-xl border border-zinc-800 bg-black/40 px-2.5 py-2 text-[10px] text-zinc-400 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-xs">
                   <div
                     className="cf-turnstile"
                     data-sitekey={turnstileSiteKey}
@@ -831,6 +834,7 @@ export default function Home() {
                     data-expired-callback="turnstileExpired"
                     data-error-callback="turnstileError"
                     data-theme="dark"
+                    data-size="normal"
                   />
                 </div>
                 {!turnstileSiteKey && (
@@ -845,19 +849,19 @@ export default function Home() {
                 )}
                 <button
                   type="submit"
-                  className="w-full rounded-full bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-zinc-200"
+                  className="h-7 w-full rounded-full bg-white px-4 text-[11px] font-semibold text-black transition hover:bg-zinc-200 sm:h-auto sm:py-3 sm:text-sm"
                 >
                   {isRegister ? "Daftar" : "Login"}
                 </button>
               </form>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-500">
+              <div className="mt-2.5 flex flex-col items-stretch gap-2 text-[11px] text-zinc-500 sm:mt-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:text-xs">
                 <button
                   type="button"
                   onClick={() => {
                     setIsRegister((prev) => !prev);
                     setTurnstileToken(null);
                   }}
-                  className="text-zinc-300 transition hover:text-white"
+                  className="w-full text-left text-zinc-300 transition hover:text-white sm:w-auto"
                 >
                   {isRegister
                     ? "Sudah punya akun? Login"
@@ -866,7 +870,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
-                  className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950/40 px-4 py-2 text-xs text-zinc-200 transition hover:border-zinc-500 hover:bg-zinc-900/60 hover:text-white"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-zinc-700 bg-zinc-950/40 px-3 py-1.5 text-[11px] text-zinc-200 transition hover:border-zinc-500 hover:bg-zinc-900/60 hover:text-white sm:w-auto sm:px-4 sm:py-2 sm:text-xs"
                 >
                   <svg
                     aria-hidden="true"

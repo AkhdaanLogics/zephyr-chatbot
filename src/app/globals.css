@@ -76,3 +76,29 @@ body {
 .animate-pulse-soft {
   animation: pulse 1.4s ease-in-out infinite;
 }
+
+.cf-turnstile {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  width: 100%;
+}
+
+.turnstile-shell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 96px;
+}
+
+@media (max-width: 639px) {
+  .cf-turnstile {
+    transform: scale(0.9);
+    transform-origin: center top;
+  }
+
+  .turnstile-shell {
+    min-height: 88px;
+  }
+}
