@@ -664,23 +664,79 @@ export default function Home() {
 
   const chatPanel = (
     <div
-      className={`zephyr-panel zephyr-glow flex h-full w-full flex-col rounded-3xl p-6 sm:p-8 ${
-        isWide ? "" : ""
+      className={`zephyr-panel zephyr-glow flex h-full w-full min-h-0 flex-col rounded-3xl p-6 sm:p-8 ${
+        isWide ? "pt-20 sm:pt-8" : ""
       }`}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
             Live Session
           </p>
           <h2 className="text-2xl font-semibold text-white">Chat Intelektro</h2>
         </div>
-        <span className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-400">
-          {isLoading ? "Menganalisa" : "Siap"}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-400">
+            {isLoading ? "Menganalisa" : "Siap"}
+          </span>
+          {isWide && (
+            <>
+              <button
+                type="button"
+                onClick={() => setShowSummary(true)}
+                className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-white lg:hidden"
+                title="Ringkasan"
+                aria-label="Ringkasan"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsWide((prev) => !prev)}
+                className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-white"
+                title="Lebar standar"
+                aria-label="Lebar standar"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 8h4V4M20 8h-4V4M4 16h4v4M20 16h-4v4" />
+                </svg>
+              </button>
+              <span className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-400">
+                {currentUser.email ?? "Akun aktif"}
+              </span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-white"
+              >
+                Keluar
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="mt-6 flex min-h-[320px] flex-1 flex-col gap-4">
+      <div className="mt-6 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         {messages.length === 0 ? (
           <div className="flex h-full flex-col justify-center rounded-2xl border border-dashed border-zinc-800 p-8 text-sm text-zinc-500">
             <p className="mb-4 text-base text-zinc-300">
@@ -1203,7 +1259,7 @@ export default function Home() {
       <div className="pointer-events-none absolute inset-0 zephyr-grid opacity-20" />
       <div
         className={`relative mx-auto flex min-h-screen w-full flex-col gap-10 px-6 ${
-          isWide ? "max-w-none py-6 h-screen" : "max-w-6xl py-14"
+          isWide ? "max-w-none py-4 min-h-screen" : "max-w-6xl py-14"
         }`}
       >
         {!isWide && (
@@ -1258,59 +1314,7 @@ export default function Home() {
         )}
 
         {isWide ? (
-          <section className="relative flex w-full flex-1 gap-6">
-            <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setShowSummary(true)}
-                className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-white lg:hidden"
-                title="Ringkasan"
-                aria-label="Ringkasan"
-              >
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsWide((prev) => !prev)}
-                className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-white"
-                title="Lebar standar"
-                aria-label="Lebar standar"
-              >
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 8h4V4M20 8h-4V4M4 16h4v4M20 16h-4v4" />
-                </svg>
-              </button>
-              <span className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-400">
-                {currentUser.email ?? "Akun aktif"}
-              </span>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="rounded-full border border-zinc-700/80 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-white"
-              >
-                Keluar
-              </button>
-            </div>
+          <section className="relative flex w-full flex-1 gap-6 min-h-0">
             <aside className="zephyr-panel hidden w-80 shrink-0 rounded-3xl p-6 sm:p-8 lg:block">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-white">Ringkasan</h3>
